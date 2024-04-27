@@ -10,7 +10,7 @@ class Program
         Console.WriteLine();                                                                                        //Spacing
         Console.WriteLine();                                                                                        //Spacing
 
-        Console.Write("What is your grade percentage? ");                                                           //Asks for use input for grade percentage
+        Console.Write("What is your grade percentage? ");                                                           //Asks for user input for grade percentage
         string userInput = Console.ReadLine();                                                                      //Returns a string that comes from user input
         int gradePercentage = int.Parse(userInput);                                                                 //Converts user input from string to integer
 
