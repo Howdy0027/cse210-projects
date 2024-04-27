@@ -34,7 +34,6 @@ class Program
                 Console.WriteLine("Yay!! You guessed it, Bravo!!");                                                 //Response for correct guess
                 Console.WriteLine();                                                                                //Spacing
             }
-
         }                    
     }
 }
