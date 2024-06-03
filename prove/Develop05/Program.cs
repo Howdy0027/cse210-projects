@@ -42,6 +42,8 @@ class Program
 
         // Load the goals and the current score from the file named "goals.txt"
         manager.LoadGoals("goals.txt");
+
+        // List the details again to verify the loaded data
+        manager.ListGoalDetails();
     }
 }
-

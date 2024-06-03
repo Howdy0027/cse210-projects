@@ -42,4 +42,3 @@ public class SimpleGoal : Goal
         return $"SimpleGoal,{GetShortName()},{GetDescription()},{GetPoints()},{_isComplete}";
     }
 }
-
