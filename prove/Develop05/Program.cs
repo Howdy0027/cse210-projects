@@ -1,49 +1,45 @@
-using System; // Importing the System namespace for basic functionality
+using System;
 
 class Program
 {
     static void Main(string[] args)
     {
-        // Create an instance of GoalManager to manage the goals
-        GoalManager manager = new GoalManager();
+        GoalManager goalManager = new GoalManager();
 
-        // Create a SimpleGoal instance for running a marathon and add it to the manager
-        SimpleGoal sg = new SimpleGoal("Run a marathon", "Complete a marathon", "1000");
-        manager.CreateGoal(sg);
+        Console.WriteLine("Creating sample goals...");
+        // Sample goals
+        goalManager.CreateGoal(new SimpleGoal("Run Marathon", "Complete a full marathon", 1000));
+        goalManager.CreateGoal(new EternalGoal("Read Scriptures", "Read scriptures daily", 100));
+        goalManager.CreateGoal(new ChecklistGoal("Attend Temple", "Attend the temple 10 times", 50, 10, 500));
 
-        // Create an EternalGoal instance for reading scriptures and add it to the manager
-        EternalGoal eg = new EternalGoal("Read scriptures", "Read the scriptures daily", "100");
-        manager.CreateGoal(eg);
+        Console.WriteLine("Initial player info and goals:");
+        goalManager.DisplayPlayerInfo();
+        goalManager.ListGoalNames();
+        goalManager.ListGoalDetails();
 
-        // Create a ChecklistGoal instance for attending the temple and add it to the manager
-        ChecklistGoal cg = new ChecklistGoal("Attend temple", "Attend the temple 10 times", "50", 10, 500);
-        manager.CreateGoal(cg);
+        Console.WriteLine("\nRecording some events...");
+        // Record some events
+        goalManager.RecordEvent("Run Marathon");
+        goalManager.RecordEvent("Read Scriptures");
+        goalManager.RecordEvent("Attend Temple");
+        goalManager.RecordEvent("Attend Temple");
 
-        // List the names of all the goals managed by GoalManager
-        manager.ListGoalNames();
+        Console.WriteLine("\nUpdated player info and goals:");
+        goalManager.DisplayPlayerInfo();
+        goalManager.ListGoalDetails();
 
-        // List the details of all the goals managed by GoalManager
-        manager.ListGoalDetails();
+        // Save and load goals (file operations)
+        string filename = "goals.txt";
+        Console.WriteLine($"\nSaving goals to {filename}...");
+        goalManager.SaveGoals(filename);
+        Console.WriteLine("Goals saved.");
 
-        // Record an event for the first goal (index 0), marking it as completed
-        manager.RecordEvent(0); // Complete the marathon
+        Console.WriteLine("\nLoading goals from file...");
+        goalManager.LoadGoals(filename);
+        Console.WriteLine("Goals loaded.");
 
-        // Record an event for the second goal (index 1), marking it as completed
-        manager.RecordEvent(1); // Read scriptures
-
-        // Record an event for the third goal (index 2), marking it as completed
-        manager.RecordEvent(2); // Attend temple
-
-        // Display the player's current score
-        manager.DisplayPlayerInfo();
-
-        // Save the goals and the current score to a file named "goals.txt"
-        manager.SaveGoals("goals.txt");
-
-        // Load the goals and the current score from the file named "goals.txt"
-        manager.LoadGoals("goals.txt");
-
-        // List the details again to verify the loaded data
-        manager.ListGoalDetails();
+        Console.WriteLine("\nPlayer info and goals after loading from file:");
+        goalManager.DisplayPlayerInfo();
+        goalManager.ListGoalDetails();
     }
 }

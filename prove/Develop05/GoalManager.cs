@@ -1,128 +1,123 @@
-using System; // Importing the System namespace for basic functionality
-using System.Collections.Generic; // Importing the namespace for using List<T>
-using System.IO; // Importing the namespace for file I/O operations
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 public class GoalManager
 {
-    // Private field to store a list of goals
+    // Private member variables to store goals and score
     private List<Goal> _goals;
-    // Private field to store the score
     private int _score;
 
-    // Constructor to initialize the fields
+    // Constructor to initialize the GoalManager
     public GoalManager()
     {
         _goals = new List<Goal>();
         _score = 0;
     }
 
-    // Method to start goal management (implementation can be added as needed)
+    // Method to start the goal manager (implementation details omitted)
     public void Start()
     {
-        // Implement the logic to start the goal management
+        // Implementation for starting the goal manager
     }
 
-    // Method to display the player's current score
+    // Method to display player's score
     public void DisplayPlayerInfo()
     {
         Console.WriteLine($"Score: {_score}");
     }
 
-    // Method to list the names of all goals
+    // Method to list all goal names
     public void ListGoalNames()
     {
-        for (int i = 0; i < _goals.Count; i++)
+        foreach (var goal in _goals)
         {
-            Console.WriteLine($"{i + 1}. {_goals[i].GetShortName()}");
+            Console.WriteLine(goal.GetStringRepresentation());
         }
     }
 
-    // Method to list the details of all goals
+    // Method to list detailed information for all goals
     public void ListGoalDetails()
     {
         foreach (var goal in _goals)
         {
-            Console.WriteLine(goal.GetDetailsString());
+            Console.WriteLine(goal.GetDetailString());
         }
     }
 
-    // Method to add a new goal to the list
+    // Method to create and add a new goal to the list
     public void CreateGoal(Goal goal)
     {
         _goals.Add(goal);
     }
 
-    // Method to record an event for a goal at a specified index
-    public void RecordEvent(int goalIndex)
+    // Method to record an event for a specific goal and update score
+    public void RecordEvent(string goalName)
     {
-        // Check if the goal index is valid
-        if (goalIndex < 0 || goalIndex >= _goals.Count)
+        foreach (var goal in _goals)
         {
-            Console.WriteLine("Invalid goal index.");
-            return;
-        }
+            if (goal.GetStringRepresentation().Contains(goalName))
+            {
+                goal.RecordEvent();
+                _score += goal.Points;
 
-        // Get the goal at the specified index
-        Goal goal = _goals[goalIndex];
-        // Record the event for the goal
-        goal.RecordEvent();
-        // Update the score with the points from the goal
-        _score += int.Parse(goal.GetPoints());
+                // Additional points for completing checklist goals
+                if (goal is ChecklistGoal checklistGoal && checklistGoal.IsComplete())
+                {
+                    _score += checklistGoal.Bonus;
+                }
+                break;
+            }
+        }
     }
 
-    // Method to save the goals and the score to a file
+    // Method to save goals to a file
     public void SaveGoals(string filename)
     {
         using (StreamWriter outputFile = new StreamWriter(filename))
         {
-            // Write each goal's string representation to the file
             foreach (var goal in _goals)
             {
                 outputFile.WriteLine(goal.GetStringRepresentation());
             }
-            // Write the score to the file
-            outputFile.WriteLine(_score);
         }
     }
 
-    // Method to load the goals and the score from a file
+    // Method to load goals from a file
     public void LoadGoals(string filename)
     {
-        // Check if the file exists
-        if (!File.Exists(filename))
-        {
-            Console.WriteLine("File not found.");
-            return;
-        }
+        string[] lines = System.IO.File.ReadAllLines(filename);
 
-        // Read all lines from the file
-        string[] lines = File.ReadAllLines(filename);
-        _goals.Clear();
-        // Process each line to recreate the goals
         foreach (string line in lines)
         {
-            string[] parts = line.Split(',');
-
+            string[] parts = line.Split(":");
             string type = parts[0];
+            string[] goalData = parts[1].Split(",");
+
+            // Create goals based on the type and add to the list
             if (type == "SimpleGoal")
             {
-                SimpleGoal goal = new SimpleGoal(parts[1], parts[2], parts[3]);
-                goal.SetComplete(bool.Parse(parts[4]));
+                SimpleGoal goal = new SimpleGoal(goalData[0], goalData[1], int.Parse(goalData[2]));
+                if (bool.Parse(goalData[3]))
+                {
+                    goal.RecordEvent();
+                }
                 _goals.Add(goal);
             }
             else if (type == "EternalGoal")
             {
-                EternalGoal goal = new EternalGoal(parts[1], parts[2], parts[3]);
+                EternalGoal goal = new EternalGoal(goalData[0], goalData[1], int.Parse(goalData[2]));
                 _goals.Add(goal);
             }
             else if (type == "ChecklistGoal")
             {
-                ChecklistGoal goal = new ChecklistGoal(parts[1], parts[2], parts[3], int.Parse(parts[4]), int.Parse(parts[5]));
-                goal.SetAmountCompleted(int.Parse(parts[6]));
+                ChecklistGoal goal = new ChecklistGoal(goalData[0], goalData[1], int.Parse(goalData[2]), int.Parse(goalData[4]), int.Parse(goalData[5]));
+                for (int i = 0; i < int.Parse(goalData[3]); i++)
+                {
+                    goal.RecordEvent();
+                }
                 _goals.Add(goal);
             }
         }
-        // Update the score from the last line of the file
-        _score = int.Parse(lines[^1]);
     }
 }

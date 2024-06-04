@@ -1,44 +1,36 @@
-// The SimpleGoal class inherits from the abstract Goal class
 public class SimpleGoal : Goal
 {
-    // Private field to track whether the goal is complete
+    // Private member variable to track completion status
     private bool _isComplete;
 
-    // Constructor for SimpleGoal, takes name, description, and points as parameters
-    // Calls the base class constructor to initialize the inherited fields
-    public SimpleGoal(string name, string description, string points)
+    // Constructor to initialize SimpleGoal attributes
+    public SimpleGoal(string name, string description, int points)
         : base(name, description, points)
     {
-        // Initialize the _isComplete field to false, indicating the goal is not yet complete
-        _isComplete = false;
+        _isComplete = false; // Initially not complete
     }
 
-    // Override the RecordEvent method from the Goal class
-    // Sets _isComplete to true, marking the goal as completed
+    // Method to record the event and mark the goal as complete
     public override void RecordEvent()
     {
         _isComplete = true;
     }
 
-    // Override the IsComplete method from the Goal class
-    // Returns the current completion status of the goal
-    public override bool IsComplete() => _isComplete;
-
-    // Public method to set the _isComplete field, allowing external code to mark the goal as complete or incomplete
-    public void SetComplete(bool complete) => _isComplete = complete;
-
-    // Override the GetDetailsString method from the Goal class
-    // Returns a string representation of the goal's details, including its completion status
-    public override string GetDetailsString()
+    // Method to check if the goal is complete
+    public override bool IsComplete()
     {
-        // Use a ternary operator to include a check mark if the goal is complete, or a space if it is not
-        return $"[ {(IsComplete() ? "X" : " ")} ] {base.GetDetailsString()}";
+        return _isComplete;
     }
 
-    // Override the GetStringRepresentation method from the Goal class
-    // Returns a string that includes the goal's type, name, description, points, and completion status
+    // Method to get detailed information about the goal
+    public override string GetDetailString()
+    {
+        return $"SimpleGoal: {_shortName}, {_description}, Points: {_points}, Completed: {_isComplete}";
+    }
+
+    // Method to get a string representation of the goal for saving/loading
     public override string GetStringRepresentation()
     {
-        return $"SimpleGoal,{GetShortName()},{GetDescription()},{GetPoints()},{_isComplete}";
+        return $"SimpleGoal:{_shortName},{_description},{_points},{_isComplete}";
     }
 }

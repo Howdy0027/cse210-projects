@@ -1,28 +1,32 @@
-// EternalGoal class inherits from the abstract Goal class
 public class EternalGoal : Goal
 {
-    // Constructor for EternalGoal, takes name, description, and points as parameters
-    // Calls the base class constructor to initialize the inherited fields
-    public EternalGoal(string name, string description, string points)
+    // Constructor to initialize EternalGoal attributes
+    public EternalGoal(string name, string description, int points)
         : base(name, description, points)
     {
     }
 
-    // Override the RecordEvent method from the Goal class
-    // Since eternal goals are never completed, no specific action is taken here
+    // Method to record the event (eternal goals never complete)
     public override void RecordEvent()
     {
-        // Eternal goals are never completed, just increment points
+        // No completion state change for eternal goals
     }
 
-    // Override the IsComplete method from the Goal class
-    // Eternal goals are never complete, so always return false
-    public override bool IsComplete() => false;
+    // Method to check if the goal is complete (always false for eternal goals)
+    public override bool IsComplete()
+    {
+        return false;
+    }
 
-    // Override the GetStringRepresentation method from the Goal class
-    // Returns a string representation of the eternal goal
+    // Method to get detailed information about the goal
+    public override string GetDetailString()
+    {
+        return $"EternalGoal: {_shortName}, {_description}, Points: {_points}";
+    }
+
+    // Method to get a string representation of the goal for saving/loading
     public override string GetStringRepresentation()
     {
-        return $"EternalGoal,{GetShortName()},{GetDescription()},{GetPoints()}";
+        return $"EternalGoal:{_shortName},{_description},{_points}";
     }
 }
